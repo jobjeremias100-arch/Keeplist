@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus Links</title>
+  <meta name="description" content="Salve links com descrição e categoria" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Meus Links" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --surface: #1a1a2e;
+      --surface2: #22223a;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --accent: #7c6af7;
+      --accent2: #a78bfa;
+      --success: #34d399;
+      --danger: #f87171;
+      --cat-trabalho: #7c6af7;
+      --cat-estudo: #34d399;
+      --cat-ferramenta: #f59e0b;
+      --cat-referencia: #38bdf8;
+      --cat-outros: #8888aa;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* Header */
+    header {
+      padding: 20px 20px 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .count-badge {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      background: var(--surface);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      stroke: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="search"], input[type="text"], input[type="url"], select, textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input[type="search"] {
+      padding: 10px 12px 10px 38px;
+    }
+
+    input[type="text"], input[type="url"], select {
+      padding: 10px 12px;
+    }
+
+    textarea {
+      padding: 10px 12px;
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+
+    select option { background: var(--surface2); }
+
+    /* Filter chips */
+    .filters {
+      display: flex;
+      gap: 6px;
+      padding: 12px 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+
+    .chip {
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .chip:hover { border-color: var(--accent); color: var(--accent2); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* Main content */
+    main { padding: 0 20px; }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .empty p { margin-top: 8px; font-size: 14px; }
+
+    /* Link cards */
+    .cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      transition: border-color 0.2s;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card:hover { border-color: var(--border2); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      color: var(--muted);
+      transition: color 0.15s, background 0.15s;
+      display: flex; align-items: center;
+    }
+
+    .btn-icon:hover { color: var(--text); background: var(--surface2); }
+    .btn-icon.danger:hover { color: var(--danger); }
+    .btn-icon.whatsapp:hover { color: #25d366; }
+    .btn-icon.open-link:hover { color: var(--accent2); }
+
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    /* Confirm modal */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 500;
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 24px 20px 20px;
+      width: calc(100% - 40px);
+      max-width: 340px;
+      animation: fadeIn 0.15s ease;
+    }
+    .modal-icon {
+      width: 40px; height: 40px;
+      background: rgba(248,113,113,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .modal-icon svg { width: 20px; height: 20px; stroke: var(--danger); }
+    .modal-title { font-size: 15px; font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .modal-desc { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.5; }
+    .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-cancel {
+      padding: 10px; border-radius: var(--radius-sm);
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text); font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s;
+    }
+    .btn-cancel:hover { opacity: 0.8; }
+    .btn-confirm-del {
+      padding: 10px; border-radius: var(--radius-sm);
+      background: var(--danger); border: none;
+      color: #fff; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s;
+    }
+    .btn-confirm-del:hover { opacity: 0.85; }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cat-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .cat-trabalho  { background: rgba(124,106,247,0.15); color: #a78bfa; }
+    .cat-estudo    { background: rgba(52,211,153,0.12); color: #34d399; }
+    .cat-ferramenta{ background: rgba(245,158,11,0.12); color: #fbbf24; }
+    .cat-referencia{ background: rgba(56,189,248,0.12); color: #38bdf8; }
+    .cat-outros    { background: rgba(136,136,170,0.12); color: #8888aa; }
+
+    .card-url {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(124,106,247,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 200;
+    }
+    .fab:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(124,106,247,0.6); }
+    .fab:active { transform: scale(0.96); }
+    .fab svg { width: 22px; height: 22px; stroke: #fff; }
+
+    /* Drawer */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 300;
+      backdrop-filter: blur(4px);
+    }
+    .overlay.open { display: block; }
+
+    .drawer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border2);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 20px 40px;
+      z-index: 400;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .drawer.open { transform: translateY(0); }
+
+    .drawer-handle {
+      width: 36px; height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .drawer-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; letter-spacing: 0.3px; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .btn-save {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      margin-top: 4px;
+      transition: opacity 0.2s;
+    }
+    .btn-save:hover { opacity: 0.88; }
+    .btn-save:active { opacity: 0.75; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 30px;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 999;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-top">
+      <div class="logo">
+        <span class="logo-dot"></span>
+        Meus Links
+      </div>
+      <span class="count-badge" id="count">0 links</span>
+    </div>
+    <div class="search-wrap">
+      <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="search" id="search" placeholder="Buscar por título, descrição ou URL…" oninput="render()" />
+    </div>
+  </header>
+
+  <div class="filters">
+    <button class="chip active" onclick="setFilter('todos',this)">Todos</button>
+    <button class="chip" onclick="setFilter('trabalho',this)">Trabalho</button>
+    <button class="chip" onclick="setFilter('estudo',this)">Estudo</button>
+    <button class="chip" onclick="setFilter('ferramenta',this)">Ferramenta</button>
+    <button class="chip" onclick="setFilter('referencia',this)">Referência</button>
+    <button class="chip" onclick="setFilter('outros',this)">Outros</button>
+  </div>
+
+  <main>
+    <div class="cards" id="cards"></div>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" onclick="openDrawer()" title="Adicionar link">
+    <svg fill="none" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <!-- Overlay + Drawer -->
+  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title" id="drawer-title">Novo link</div>
+    <div class="row">
+      <div class="field">
+        <label>Título</label>
+        <input type="text" id="inp-title" placeholder="Nome do link" />
+      </div>
+      <div class="field">
+        <label>Categoria</label>
+        <select id="inp-cat">
+          <option value="trabalho">Trabalho</option>
+          <option value="estudo">Estudo</option>
+          <option value="ferramenta">Ferramenta</option>
+          <option value="referencia">Referência</option>
+          <option value="outros">Outros</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>URL</label>
+      <input type="url" id="inp-url" placeholder="https://…" />
+    </div>
+    <div class="field">
+      <label>Descrição <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+      <textarea id="inp-desc" placeholder="Para que serve este link?"></textarea>
+    </div>
+    <button class="btn-save" onclick="saveLink()">Salvar</button>
+  </div>
+
+  <!-- Confirm delete modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </div>
+      <div class="modal-title">Excluir link?</div>
+      <div class="modal-desc" id="modal-desc">Esta ação não pode ser desfeita.</div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-confirm-del" onclick="confirmDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const CAT = { trabalho:'Trabalho', estudo:'Estudo', ferramenta:'Ferramenta', referencia:'Referência', outros:'Outros' };
+  let links = JSON.parse(localStorage.getItem('meus-links') || '[]');
+  let filter = 'todos';
+  let editId = null;
+  let pendingDeleteId = null;
+
+  if (!links.length) {
+    links = [
+      { id: 1, title: 'MDN Web Docs', url: 'https://developer.mozilla.org', desc: 'Referência completa para HTML, CSS e JavaScript.', cat: 'referencia', ts: Date.now() },
+      { id: 2, title: 'Claude.ai', url: 'https://claude.ai', desc: 'Assistente de IA da Anthropic.', cat: 'ferramenta', ts: Date.now() },
+    ];
+    save();
+  }
+
+  function save() {
+    localStorage.setItem('meus-links', JSON.stringify(links));
+  }
+
+  function setFilter(f, el) {
+    filter = f;
+    document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    render();
+  }
+
+  function openDrawer(id) {
+    editId = id || null;
+    const t = document.getElementById('inp-title');
+    const u = document.getElementById('inp-url');
+    const d = document.getElementById('inp-desc');
+    const c = document.getElementById('inp-cat');
+    document.getElementById('drawer-title').textContent = id ? 'Editar link' : 'Novo link';
+    if (id) {
+      const l = links.find(x => x.id === id);
+      t.value = l.title; u.value = l.url; d.value = l.desc; c.value = l.cat;
+    } else {
+      t.value = ''; u.value = ''; d.value = ''; c.value = 'trabalho';
+    }
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+    setTimeout(() => t.focus(), 300);
+  }
+
+  function closeDrawer() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('drawer').classList.remove('open');
+  }
+
+  function saveLink() {
+    const title = document.getElementById('inp-title').value.trim();
+    const url   = document.getElementById('inp-url').value.trim();
+    const desc  = document.getElementById('inp-desc').value.trim();
+    const cat   = document.getElementById('inp-cat').value;
+    if (!title || !url) { toast('Preencha o título e a URL'); return; }
+    if (editId) {
+      const l = links.find(x => x.id === editId);
+      Object.assign(l, { title, url, desc, cat });
+      toast('Link atualizado!');
+    } else {
+      links.unshift({ id: Date.now(), title, url, desc, cat, ts: Date.now() });
+      toast('Link salvo!');
+    }
+    save(); render(); closeDrawer();
+  }
+
+  function removeLink(id) {
+    pendingDeleteId = id;
+    const l = links.find(x => x.id === id);
+    document.getElementById('modal-desc').textContent = '"' + l.title + '" será removido permanentemente.';
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    pendingDeleteId = null;
+  }
+
+  function confirmDelete() {
+    if (!pendingDeleteId) return;
+    links = links.filter(l => l.id !== pendingDeleteId);
+    save(); render(); closeModal(); toast('Link excluído.');
+  }
+
+  function shareWhatsapp(id) {
+    const l = links.find(x => x.id === id);
+    const text = encodeURIComponent((l.desc ? l.desc + '\n' : '') + l.url);
+    window.open('https://wa.me/?text=' + text, '_blank');
+  }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  function render() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const filtered = links.filter(l => {
+      const matchCat = filter === 'todos' || l.cat === filter;
+      const matchQ = !q || l.title.toLowerCase().includes(q) || (l.desc||'').toLowerCase().includes(q) || l.url.toLowerCase().includes(q);
+      return matchCat && matchQ;
+    });
+    const count = document.getElementById('count');
+    count.textContent = filtered.length + (filtered.length === 1 ? ' link' : ' links');
+    const container = document.getElementById('cards');
+    if (!filtered.length) {
+      container.innerHTML = `<div class="empty"><svg width="40" height="40" fill="none" stroke="var(--muted)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg><p>Nenhum link encontrado.</p></div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(l => `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">${esc(l.title)}</div>
+          <div class="card-actions">
+            <button class="btn-icon open-link" onclick="window.open('${esc(l.url)}','_blank')" title="Abrir link">
+              <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </button>
+            <button class="btn-icon whatsapp" onclick="shareWhatsapp(${l.id})" title="Enviar pelo WhatsApp">
+              <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            </button>
+            <button class="btn-icon" onclick="openDrawer(${l.id})" title="Editar">
+              <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg>
+            </button>
+            <button class="btn-icon danger" onclick="removeLink(${l.id})" title="Excluir">
+              <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>
+        </div>
+        ${l.desc ? `<div class="card-desc">${esc(l.desc)}</div>` : ''}
+        <div class="card-footer">
+          <span class="cat-badge cat-${l.cat}">${CAT[l.cat]}</span>
+          <span class="card-url">${esc(l.url)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  render();
+</script>
+</body>
+</html>
