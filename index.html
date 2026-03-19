@@ -15,404 +15,86 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0f0f1a;
-      --surface: #1a1a2e;
-      --surface2: #22223a;
-      --border: rgba(255,255,255,0.08);
-      --border2: rgba(255,255,255,0.14);
-      --text: #e8e8f0;
-      --muted: #8888aa;
-      --accent: #7c6af7;
-      --accent2: #a78bfa;
-      --success: #34d399;
-      --danger: #f87171;
-      --cat-trabalho: #7c6af7;
-      --cat-estudo: #34d399;
-      --cat-ferramenta: #f59e0b;
-      --cat-referencia: #38bdf8;
-      --cat-outros: #8888aa;
-      --radius: 12px;
-      --radius-sm: 8px;
+      --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #22223a;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --text: #e8e8f0; --muted: #8888aa; --accent: #7c6af7; --accent2: #a78bfa;
+      --success: #34d399; --danger: #f87171; --radius: 12px; --radius-sm: 8px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 100px;
-    }
-
-    /* Header */
-    header {
-      padding: 20px 20px 0;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 100;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .logo {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-dot {
-      width: 8px; height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .count-badge {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      background: var(--surface);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-    }
-
-    /* Search */
-    .search-wrap {
-      position: relative;
-    }
-
-    .search-wrap svg {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px; height: 16px;
-      stroke: var(--muted);
-      pointer-events: none;
-    }
-
-    input[type="search"], input[type="text"], input[type="url"], select, textarea {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      transition: border-color 0.2s;
-      outline: none;
-    }
-
-    input[type="search"] {
-      padding: 10px 12px 10px 38px;
-    }
-
-    input[type="text"], input[type="url"], select {
-      padding: 10px 12px;
-    }
-
-    textarea {
-      padding: 10px 12px;
-      resize: vertical;
-      min-height: 72px;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 100px; }
+    header { padding: 20px 20px 12px; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .logo { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+    .sync-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
+    .sync-dot.online { background: var(--success); }
+    .sync-dot.saving { background: #f59e0b; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .count-badge { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; background: var(--surface); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--muted); pointer-events: none; }
+    input[type="search"], input[type="text"], input[type="url"], select, textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: border-color 0.2s; outline: none; }
+    input[type="search"] { padding: 10px 12px 10px 38px; }
+    input[type="text"], input[type="url"], select { padding: 10px 12px; }
+    textarea { padding: 10px 12px; resize: vertical; min-height: 72px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
     input::placeholder, textarea::placeholder { color: var(--muted); }
-
     select option { background: var(--surface2); }
-
-    /* Filter chips */
-    .filters {
-      display: flex;
-      gap: 6px;
-      padding: 12px 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+    .filters { display: flex; gap: 6px; padding: 12px 20px; overflow-x: auto; scrollbar-width: none; }
     .filters::-webkit-scrollbar { display: none; }
-
-    .chip {
-      white-space: nowrap;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--border2);
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
-    }
-
+    .chip { white-space: nowrap; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
     .chip:hover { border-color: var(--accent); color: var(--accent2); }
     .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-    /* Main content */
     main { padding: 0 20px; }
-
-    /* Empty state */
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
+    .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
     .empty p { margin-top: 8px; font-size: 14px; }
-
-    /* Link cards */
+    .loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
     .cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      transition: border-color 0.2s;
-      animation: fadeIn 0.2s ease;
-    }
-
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; transition: border-color 0.2s; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
     .card:hover { border-color: var(--border2); }
-
-    .card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text);
-      flex: 1;
-    }
-
+    .card-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
     .card-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-
-    .btn-icon {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      padding: 5px 11px;
-      border-radius: 20px;
-      color: var(--muted);
-      transition: color 0.15s, border-color 0.15s;
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
+    .btn-icon { background: var(--surface2); border: 1px solid var(--border); cursor: pointer; padding: 5px 11px; border-radius: 20px; color: var(--muted); transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; white-space: nowrap; }
     .btn-icon:hover { color: var(--text); border-color: var(--border2); }
     .btn-icon.danger:hover { color: var(--danger); border-color: var(--danger); }
     .btn-icon.whatsapp:hover { color: #25d366; border-color: #25d366; }
     .btn-icon.open-link:hover { color: var(--accent2); border-color: var(--accent2); }
-
-    /* Confirm modal */
-    .modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 500;
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius);
-      padding: 24px 20px 20px;
-      width: calc(100% - 40px);
-      max-width: 340px;
-      animation: fadeIn 0.15s ease;
-    }
-    .modal-icon {
-      width: 40px; height: 40px;
-      background: rgba(248,113,113,0.12);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px;
-    }
-    .modal-icon svg { width: 20px; height: 20px; stroke: var(--danger); }
-    .modal-title { font-size: 15px; font-weight: 600; text-align: center; margin-bottom: 6px; }
-    .modal-desc { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.5; }
-    .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-cancel {
-      padding: 10px; border-radius: var(--radius-sm);
-      background: var(--surface2); border: 1px solid var(--border2);
-      color: var(--text); font-size: 14px; font-weight: 500;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.15s;
-    }
-    .btn-cancel:hover { opacity: 0.8; }
-    .btn-confirm-del {
-      padding: 10px; border-radius: var(--radius-sm);
-      background: var(--danger); border: none;
-      color: #fff; font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.15s;
-    }
-    .btn-confirm-del:hover { opacity: 0.85; }
-
-    .card-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 10px;
-    }
-
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .cat-badge {
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-
+    .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+    .cat-badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
     .cat-trabalho  { background: rgba(124,106,247,0.15); color: #a78bfa; }
     .cat-estudo    { background: rgba(52,211,153,0.12); color: #34d399; }
     .cat-ferramenta{ background: rgba(245,158,11,0.12); color: #fbbf24; }
     .cat-referencia{ background: rgba(56,189,248,0.12); color: #38bdf8; }
     .cat-outros    { background: rgba(136,136,170,0.12); color: #8888aa; }
-
-    .card-url {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 180px;
-    }
-
-    /* FAB */
-    .fab {
-      position: fixed;
-      bottom: 24px;
-      right: 20px;
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: none;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 24px rgba(124,106,247,0.5);
-      transition: transform 0.2s, box-shadow 0.2s;
-      z-index: 200;
-    }
-    .fab:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(124,106,247,0.6); }
-    .fab:active { transform: scale(0.96); }
+    .card-url { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+    .fab { position: fixed; bottom: 24px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(124,106,247,0.5); transition: transform 0.2s; z-index: 200; }
+    .fab:hover { transform: scale(1.07); }
     .fab svg { width: 22px; height: 22px; stroke: #fff; }
-
-    /* Drawer */
-    .overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 300;
-      backdrop-filter: blur(4px);
-    }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; backdrop-filter: blur(4px); }
     .overlay.open { display: block; }
-
-    .drawer {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border2);
-      border-radius: 20px 20px 0 0;
-      padding: 20px 20px 40px;
-      z-index: 400;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+    .drawer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border2); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; z-index: 400; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); max-height: 90vh; overflow-y: auto; }
     .drawer.open { transform: translateY(0); }
-
-    .drawer-handle {
-      width: 36px; height: 4px;
-      background: var(--border2);
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
-
-    .drawer-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 18px;
-      color: var(--text);
-    }
-
+    .drawer-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 20px; }
+    .drawer-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; color: var(--text); }
     .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; letter-spacing: 0.3px; }
-
+    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .btn-save {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      margin-top: 4px;
-      transition: opacity 0.2s;
-    }
+    .btn-save { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 4px; transition: opacity 0.2s; }
     .btn-save:hover { opacity: 0.88; }
-    .btn-save:active { opacity: 0.75; }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 90px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      font-size: 13px;
-      padding: 10px 18px;
-      border-radius: 30px;
-      opacity: 0;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 999;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 24px 20px 20px; width: calc(100% - 40px); max-width: 340px; animation: fadeIn 0.15s ease; }
+    .modal-icon { width: 40px; height: 40px; background: rgba(248,113,113,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+    .modal-icon svg { width: 20px; height: 20px; stroke: var(--danger); }
+    .modal-title { font-size: 15px; font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .modal-desc { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.5; }
+    .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-cancel { padding: 10px; border-radius: var(--radius-sm); background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .btn-confirm-del { padding: 10px; border-radius: var(--radius-sm); background: var(--danger); border: none; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 13px; padding: 10px 18px; border-radius: 30px; opacity: 0; transition: opacity 0.2s, transform 0.2s; z-index: 999; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
@@ -420,11 +102,14 @@
 
   <header>
     <div class="header-top">
-      <div class="logo">
-        <span class="logo-dot"></span>
-        Meus Links
+      <div class="logo"><span class="logo-dot"></span>Meus Links</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="sync-indicator">
+          <div class="sync-dot" id="sync-dot"></div>
+          <span id="sync-label">conectando…</span>
+        </div>
+        <span class="count-badge" id="count">0 links</span>
       </div>
-      <span class="count-badge" id="count">0 links</span>
     </div>
     <div class="search-wrap">
       <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -441,27 +126,19 @@
     <button class="chip" onclick="setFilter('outros',this)">Outros</button>
   </div>
 
-  <main>
-    <div class="cards" id="cards"></div>
-  </main>
+  <main><div class="cards" id="cards"><div class="loading">🔄 Carregando seus links…</div></div></main>
 
-  <!-- FAB -->
   <button class="fab" onclick="openDrawer()" title="Adicionar link">
     <svg fill="none" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
   </button>
 
-  <!-- Overlay + Drawer -->
   <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-handle"></div>
     <div class="drawer-title" id="drawer-title">Novo link</div>
     <div class="row">
-      <div class="field">
-        <label>Título</label>
-        <input type="text" id="inp-title" placeholder="Nome do link" />
-      </div>
-      <div class="field">
-        <label>Categoria</label>
+      <div class="field"><label>Título</label><input type="text" id="inp-title" placeholder="Nome do link" /></div>
+      <div class="field"><label>Categoria</label>
         <select id="inp-cat">
           <option value="trabalho">Trabalho</option>
           <option value="estudo">Estudo</option>
@@ -471,23 +148,14 @@
         </select>
       </div>
     </div>
-    <div class="field">
-      <label>URL</label>
-      <input type="url" id="inp-url" placeholder="https://…" />
-    </div>
-    <div class="field">
-      <label>Descrição <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
-      <textarea id="inp-desc" placeholder="Para que serve este link?"></textarea>
-    </div>
+    <div class="field"><label>URL</label><input type="url" id="inp-url" placeholder="https://…" /></div>
+    <div class="field"><label>Descrição <span style="color:var(--muted);font-weight:400">(opcional)</span></label><textarea id="inp-desc" placeholder="Para que serve este link?"></textarea></div>
     <button class="btn-save" onclick="saveLink()">Salvar</button>
   </div>
 
-  <!-- Confirm delete modal -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
-      <div class="modal-icon">
-        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </div>
+      <div class="modal-icon"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
       <div class="modal-title">Excluir link?</div>
       <div class="modal-desc" id="modal-desc">Esta ação não pode ser desfeita.</div>
       <div class="modal-btns">
@@ -499,142 +167,168 @@
 
   <div class="toast" id="toast"></div>
 
-<script>
-  const CAT = { trabalho:'Trabalho', estudo:'Estudo', ferramenta:'Ferramenta', referencia:'Referência', outros:'Outros' };
-  let links = JSON.parse(localStorage.getItem('meus-links') || '[]');
-  let filter = 'todos';
-  let editId = null;
-  let pendingDeleteId = null;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  if (!links.length) {
-    links = [
-      { id: 1, title: 'MDN Web Docs', url: 'https://developer.mozilla.org', desc: 'Referência completa para HTML, CSS e JavaScript.', cat: 'referencia', ts: Date.now() },
-      { id: 2, title: 'Claude.ai', url: 'https://claude.ai', desc: 'Assistente de IA da Anthropic.', cat: 'ferramenta', ts: Date.now() },
-    ];
-    save();
-  }
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWXVKnLb0cjqkkO_4mPLY_D8LFlmJrX8c",
+      authDomain: "meus-links-b40e9.firebaseapp.com",
+      projectId: "meus-links-b40e9",
+      storageBucket: "meus-links-b40e9.firebasestorage.app",
+      messagingSenderId: "747194998453",
+      appId: "1:747194998453:web:93ed9c299df6bbc6dce8fc"
+    };
 
-  function save() {
-    localStorage.setItem('meus-links', JSON.stringify(links));
-  }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const colRef = collection(db, "links");
 
-  function setFilter(f, el) {
-    filter = f;
-    document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    render();
-  }
+    const CAT = { trabalho:'Trabalho', estudo:'Estudo', ferramenta:'Ferramenta', referencia:'Referência', outros:'Outros' };
+    let links = [];
+    let filter = 'todos';
+    let editDocId = null;
+    let pendingDeleteId = null;
 
-  function openDrawer(id) {
-    editId = id || null;
-    const t = document.getElementById('inp-title');
-    const u = document.getElementById('inp-url');
-    const d = document.getElementById('inp-desc');
-    const c = document.getElementById('inp-cat');
-    document.getElementById('drawer-title').textContent = id ? 'Editar link' : 'Novo link';
-    if (id) {
-      const l = links.find(x => x.id === id);
-      t.value = l.title; u.value = l.url; d.value = l.desc; c.value = l.cat;
-    } else {
-      t.value = ''; u.value = ''; d.value = ''; c.value = 'trabalho';
+    function setSyncStatus(status) {
+      const dot = document.getElementById('sync-dot');
+      const label = document.getElementById('sync-label');
+      if (status === 'online') { dot.className = 'sync-dot online'; label.textContent = 'sincronizado'; }
+      else if (status === 'saving') { dot.className = 'sync-dot saving'; label.textContent = 'salvando…'; }
+      else { dot.className = 'sync-dot'; label.textContent = 'conectando…'; }
     }
-    document.getElementById('overlay').classList.add('open');
-    document.getElementById('drawer').classList.add('open');
-    setTimeout(() => t.focus(), 300);
-  }
 
-  function closeDrawer() {
-    document.getElementById('overlay').classList.remove('open');
-    document.getElementById('drawer').classList.remove('open');
-  }
+    const q = query(colRef, orderBy("ts", "desc"));
+    onSnapshot(q, (snapshot) => {
+      links = snapshot.docs.map(d => ({ ...d.data(), docId: d.id }));
+      setSyncStatus('online');
+      render();
+    }, () => setSyncStatus('offline'));
 
-  function saveLink() {
-    const title = document.getElementById('inp-title').value.trim();
-    const url   = document.getElementById('inp-url').value.trim();
-    const desc  = document.getElementById('inp-desc').value.trim();
-    const cat   = document.getElementById('inp-cat').value;
-    if (!title || !url) { toast('Preencha o título e a URL'); return; }
-    if (editId) {
-      const l = links.find(x => x.id === editId);
-      Object.assign(l, { title, url, desc, cat });
-      toast('Link atualizado!');
-    } else {
-      links.unshift({ id: Date.now(), title, url, desc, cat, ts: Date.now() });
-      toast('Link salvo!');
+    window.setFilter = (f, el) => {
+      filter = f;
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      render();
+    };
+
+    window.openDrawer = (docId) => {
+      editDocId = docId || null;
+      const t = document.getElementById('inp-title');
+      const u = document.getElementById('inp-url');
+      const d = document.getElementById('inp-desc');
+      const c = document.getElementById('inp-cat');
+      document.getElementById('drawer-title').textContent = docId ? 'Editar link' : 'Novo link';
+      if (docId) {
+        const l = links.find(x => x.docId === docId);
+        t.value = l.title; u.value = l.url; d.value = l.desc || ''; c.value = l.cat;
+      } else {
+        t.value = ''; u.value = ''; d.value = ''; c.value = 'trabalho';
+      }
+      document.getElementById('overlay').classList.add('open');
+      document.getElementById('drawer').classList.add('open');
+      setTimeout(() => t.focus(), 300);
+    };
+
+    window.closeDrawer = () => {
+      document.getElementById('overlay').classList.remove('open');
+      document.getElementById('drawer').classList.remove('open');
+    };
+
+    window.saveLink = async () => {
+      const title = document.getElementById('inp-title').value.trim();
+      const url   = document.getElementById('inp-url').value.trim();
+      const desc  = document.getElementById('inp-desc').value.trim();
+      const cat   = document.getElementById('inp-cat').value;
+      if (!title || !url) { toast('Preencha o título e a URL'); return; }
+      setSyncStatus('saving');
+      try {
+        if (editDocId) {
+          await updateDoc(doc(db, "links", editDocId), { title, url, desc, cat });
+          toast('Link atualizado!');
+        } else {
+          await addDoc(colRef, { title, url, desc, cat, ts: Date.now() });
+          toast('Link salvo! ✓');
+        }
+        closeDrawer();
+      } catch(e) {
+        toast('Erro ao salvar. Tente novamente.');
+        setSyncStatus('online');
+      }
+    };
+
+    window.removeLink = (docId) => {
+      pendingDeleteId = docId;
+      const l = links.find(x => x.docId === docId);
+      document.getElementById('modal-desc').textContent = '"' + l.title + '" será removido permanentemente.';
+      document.getElementById('modal-overlay').classList.add('open');
+    };
+
+    window.closeModal = () => {
+      document.getElementById('modal-overlay').classList.remove('open');
+      pendingDeleteId = null;
+    };
+
+    window.confirmDelete = async () => {
+      if (!pendingDeleteId) return;
+      setSyncStatus('saving');
+      try {
+        await deleteDoc(doc(db, "links", pendingDeleteId));
+        toast('Link excluído.');
+      } catch(e) {
+        toast('Erro ao excluir.');
+        setSyncStatus('online');
+      }
+      closeModal();
+    };
+
+    window.shareWhatsapp = (docId) => {
+      const l = links.find(x => x.docId === docId);
+      const text = encodeURIComponent((l.desc ? l.desc + '\n' : '') + l.url);
+      window.open('https://wa.me/?text=' + text, '_blank');
+    };
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2400);
     }
-    save(); render(); closeDrawer();
-  }
 
-  function removeLink(id) {
-    pendingDeleteId = id;
-    const l = links.find(x => x.id === id);
-    document.getElementById('modal-desc').textContent = '"' + l.title + '" será removido permanentemente.';
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('open');
-    pendingDeleteId = null;
-  }
-
-  function confirmDelete() {
-    if (!pendingDeleteId) return;
-    links = links.filter(l => l.id !== pendingDeleteId);
-    save(); render(); closeModal(); toast('Link excluído.');
-  }
-
-  function shareWhatsapp(id) {
-    const l = links.find(x => x.id === id);
-    const text = encodeURIComponent((l.desc ? l.desc + '\n' : '') + l.url);
-    window.open('https://wa.me/?text=' + text, '_blank');
-  }
-
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2400);
-  }
-
-  function render() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const filtered = links.filter(l => {
-      const matchCat = filter === 'todos' || l.cat === filter;
-      const matchQ = !q || l.title.toLowerCase().includes(q) || (l.desc||'').toLowerCase().includes(q) || l.url.toLowerCase().includes(q);
-      return matchCat && matchQ;
-    });
-    const count = document.getElementById('count');
-    count.textContent = filtered.length + (filtered.length === 1 ? ' link' : ' links');
-    const container = document.getElementById('cards');
-    if (!filtered.length) {
-      container.innerHTML = `<div class="empty"><svg width="40" height="40" fill="none" stroke="var(--muted)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg><p>Nenhum link encontrado.</p></div>`;
-      return;
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-    container.innerHTML = filtered.map(l => `
-      <div class="card">
-        <div class="card-header">
+
+    function render() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const filtered = links.filter(l => {
+        const matchCat = filter === 'todos' || l.cat === filter;
+        const matchQ = !q || l.title.toLowerCase().includes(q) || (l.desc||'').toLowerCase().includes(q) || l.url.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      document.getElementById('count').textContent = filtered.length + (filtered.length === 1 ? ' link' : ' links');
+      const container = document.getElementById('cards');
+      if (!filtered.length) {
+        container.innerHTML = `<div class="empty"><svg width="40" height="40" fill="none" stroke="var(--muted)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg><p>Nenhum link encontrado.</p></div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(l => `
+        <div class="card">
           <div class="card-title">${esc(l.title)}</div>
+          ${l.desc ? `<div class="card-desc">${esc(l.desc)}</div>` : ''}
+          <div class="card-actions">
+            <button class="btn-icon open-link" onclick="window.open('${esc(l.url)}','_blank')">🔗 Abrir</button>
+            <button class="btn-icon whatsapp" onclick="shareWhatsapp('${l.docId}')">💬 WhatsApp</button>
+            <button class="btn-icon" onclick="openDrawer('${l.docId}')">✏️ Editar</button>
+            <button class="btn-icon danger" onclick="removeLink('${l.docId}')">🗑️ Excluir</button>
+          </div>
+          <div class="card-footer">
+            <span class="cat-badge cat-${l.cat}">${CAT[l.cat]}</span>
+            <span class="card-url">${esc(l.url)}</span>
+          </div>
         </div>
-        ${l.desc ? `<div class="card-desc">${esc(l.desc)}</div>` : ''}
-        <div class="card-actions">
-          <button class="btn-icon open-link" onclick="window.open('${esc(l.url)}','_blank')">🔗 Abrir</button>
-          <button class="btn-icon whatsapp" onclick="shareWhatsapp(${l.id})">💬 WhatsApp</button>
-          <button class="btn-icon" onclick="openDrawer(${l.id})">✏️ Editar</button>
-          <button class="btn-icon danger" onclick="removeLink(${l.id})">🗑️ Excluir</button>
-        </div>
-        <div class="card-footer">
-          <span class="cat-badge cat-${l.cat}">${CAT[l.cat]}</span>
-          <span class="card-url">${esc(l.url)}</span>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  render();
-</script>
+      `).join('');
+    }
+  </script>
 </body>
 </html>
