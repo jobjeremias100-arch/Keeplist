@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="Meus Links" />
   <link rel="manifest" href="manifest.json" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #22223a;
@@ -46,7 +47,7 @@
     input::placeholder, textarea::placeholder { color: var(--muted); }
     select option { background: var(--surface2); }
 
-    .filters-row { display: flex; align-items: center; padding: 10px 20px; overflow-x: auto; scrollbar-width: none; gap: 0; }
+    .filters-row { display: flex; align-items: center; padding: 10px 20px; overflow-x: auto; scrollbar-width: none; }
     .filters-row::-webkit-scrollbar { display: none; }
     .filters-inner { display: flex; gap: 6px; flex: 1; overflow-x: auto; scrollbar-width: none; }
     .filters-inner::-webkit-scrollbar { display: none; }
@@ -56,14 +57,12 @@
     .btn-add-cat { white-space: nowrap; font-size: 12px; font-weight: 500; padding: 5px 10px; border-radius: 20px; border: 1px dashed var(--border2); background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; margin-left: 6px; flex-shrink: 0; transition: all 0.15s; }
     .btn-add-cat:hover { border-color: var(--accent); color: var(--accent2); }
 
-    /* Migration banner */
     .migrate-banner { margin: 12px 20px 0; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius); padding: 14px 16px; }
     .migrate-banner p { font-size: 13px; color: #fbbf24; margin-bottom: 10px; line-height: 1.5; }
     .migrate-banner-btns { display: flex; gap: 8px; flex-wrap: wrap; }
     .btn-migrate { padding: 7px 14px; border-radius: 20px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; }
     .btn-migrate.work { background: rgba(124,106,247,0.2); color: #a78bfa; }
     .btn-migrate.personal { background: rgba(52,211,153,0.15); color: #34d399; }
-    .btn-migrate:hover { opacity: 0.8; }
     .btn-migrate.dismiss { background: var(--surface2); color: var(--muted); }
 
     main { padding: 0 20px; }
@@ -83,6 +82,7 @@
     .btn-icon.whatsapp:hover { color: #25d366; border-color: #25d366; }
     .btn-icon.open-link:hover { color: var(--accent2); border-color: var(--accent2); }
     .btn-icon.move:hover { color: #fbbf24; border-color: #fbbf24; }
+    .btn-icon.qr:hover { color: #38bdf8; border-color: #38bdf8; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
     .cat-badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; background: rgba(124,106,247,0.15); color: #a78bfa; }
     .card-url { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
@@ -113,6 +113,15 @@
     .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .btn-cancel { padding: 10px; border-radius: var(--radius-sm); background: var(--surface2); border: 1px solid var(--border2); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .btn-confirm-del { padding: 10px; border-radius: var(--radius-sm); background: var(--danger); border: none; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* QR Modal */
+    .qr-modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 28px 24px 24px; width: calc(100% - 40px); max-width: 320px; animation: fadeIn 0.2s ease; text-align: center; }
+    .qr-modal-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .qr-modal-url { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 20px; word-break: break-all; }
+    .qr-box { display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 12px; padding: 16px; margin: 0 auto 20px; width: fit-content; }
+    .qr-box canvas, .qr-box img { display: block; }
+    .qr-hint { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+    .btn-close-qr { width: 100%; padding: 10px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 
     .cat-modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 24px 20px 20px; width: calc(100% - 40px); max-width: 340px; animation: fadeIn 0.15s ease; }
     .cat-modal-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
@@ -168,7 +177,7 @@
 
   <main><div class="cards" id="cards"><div class="loading">🔄 Carregando seus links…</div></div></main>
 
-  <button class="fab" onclick="openDrawer()" title="Adicionar link">
+  <button class="fab" onclick="openDrawer()">
     <svg fill="none" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
   </button>
 
@@ -185,6 +194,7 @@
     <button class="btn-save" onclick="saveLink()">Salvar</button>
   </div>
 
+  <!-- Delete modal -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
       <div class="modal-icon"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
@@ -197,6 +207,18 @@
     </div>
   </div>
 
+  <!-- QR modal -->
+  <div class="modal-overlay" id="qr-modal-overlay" onclick="closeQrModal()">
+    <div class="qr-modal" onclick="event.stopPropagation()">
+      <div class="qr-modal-title" id="qr-title"></div>
+      <div class="qr-modal-url" id="qr-url"></div>
+      <div class="qr-box"><div id="qr-code"></div></div>
+      <div class="qr-hint">📷 Aponte a câmera do celular para o QR code para abrir o link</div>
+      <button class="btn-close-qr" onclick="closeQrModal()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Category modal -->
   <div class="modal-overlay" id="cat-modal-overlay">
     <div class="cat-modal">
       <div class="cat-modal-title" id="cat-modal-title">Categorias</div>
@@ -261,10 +283,8 @@
       await setDoc(doc(db, 'config', 'categories'), categories);
     }
 
-    // Check for old links to migrate
     async function checkOldLinks() {
-      const dismissed = localStorage.getItem('migration-dismissed');
-      if (dismissed) return;
+      if (localStorage.getItem('migration-dismissed')) return;
       const snap = await getDocs(collection(db, 'links'));
       if (!snap.empty) {
         oldLinks = snap.docs.map(d => ({ ...d.data(), docId: d.id }));
@@ -276,11 +296,10 @@
     window.migrateLinks = async (target) => {
       if (!oldLinks.length) return;
       setSyncStatus('saving');
-      const targetCol = collection(db, `links_${target}`);
-      const defaultCat = target === 'work' ? 'Outros' : 'Outros';
       for (const l of oldLinks) {
-        const cat = categories[target].includes(l.cat) ? l.cat : defaultCat;
-        await addDoc(targetCol, { title: l.title, url: l.url, desc: l.desc || '', cat, ts: l.ts || Date.now() });
+        const targetCats = categories[target] || [];
+        const cat = targetCats.includes(l.cat) ? l.cat : (targetCats[targetCats.length - 1] || 'Outros');
+        await addDoc(collection(db, `links_${target}`), { title: l.title, url: l.url, desc: l.desc || '', cat, ts: l.ts || Date.now() });
       }
       document.getElementById('migrate-banner').style.display = 'none';
       localStorage.setItem('migration-dismissed', '1');
@@ -296,8 +315,7 @@
 
     function listenLinks() {
       if (unsub) unsub();
-      const colRef = collection(db, `links_${workspace}`);
-      const q = query(colRef, orderBy("ts", "desc"));
+      const q = query(collection(db, `links_${workspace}`), orderBy("ts", "desc"));
       unsub = onSnapshot(q, (snap) => {
         links = snap.docs.map(d => ({ ...d.data(), docId: d.id }));
         setSyncStatus('online');
@@ -376,18 +394,16 @@
       } catch(e) { toast('Erro ao salvar.'); setSyncStatus('online'); }
     };
 
-    // Move link to other workspace
     window.moveLink = async (docId) => {
       const l = links.find(x => x.docId === docId);
       const target = workspace === 'work' ? 'personal' : 'work';
-      const targetLabel = target === 'work' ? 'Trabalho' : 'Pessoal';
       const targetCats = categories[target] || [];
       const cat = targetCats.includes(l.cat) ? l.cat : (targetCats[targetCats.length - 1] || 'Outros');
       setSyncStatus('saving');
       try {
         await addDoc(collection(db, `links_${target}`), { title: l.title, url: l.url, desc: l.desc || '', cat, ts: l.ts || Date.now() });
         await deleteDoc(doc(db, `links_${workspace}`, docId));
-        toast(`Link movido para ${targetLabel}!`);
+        toast(`Link movido para ${target === 'work' ? 'Trabalho' : 'Pessoal'}!`);
       } catch(e) { toast('Erro ao mover.'); setSyncStatus('online'); }
     };
 
@@ -417,6 +433,28 @@
       const l = links.find(x => x.docId === docId);
       const text = encodeURIComponent((l.desc ? l.desc + '\n' : '') + l.url);
       window.open('https://wa.me/?text=' + text, '_blank');
+    };
+
+    // QR Code
+    window.showQr = (docId) => {
+      const l = links.find(x => x.docId === docId);
+      document.getElementById('qr-title').textContent = l.title;
+      document.getElementById('qr-url').textContent = l.url;
+      const container = document.getElementById('qr-code');
+      container.innerHTML = '';
+      new QRCode(container, {
+        text: l.url,
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      document.getElementById('qr-modal-overlay').classList.add('open');
+    };
+
+    window.closeQrModal = () => {
+      document.getElementById('qr-modal-overlay').classList.remove('open');
     };
 
     window.openCatModal = () => {
@@ -479,7 +517,7 @@
       });
       document.getElementById('count').textContent = filtered.length + (filtered.length === 1 ? ' link' : ' links');
       const container = document.getElementById('cards');
-      const moveLabel = workspace === 'work' ? '🏠 Mover para Pessoal' : '💼 Mover para Trabalho';
+      const moveLabel = workspace === 'work' ? '🏠 Mover' : '💼 Mover';
       if (!filtered.length) {
         container.innerHTML = `<div class="empty"><svg width="40" height="40" fill="none" stroke="var(--muted)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg><p>Nenhum link encontrado.</p></div>`;
         return;
@@ -490,6 +528,7 @@
           ${l.desc ? `<div class="card-desc">${esc(l.desc)}</div>` : ''}
           <div class="card-actions">
             <button class="btn-icon open-link" onclick="window.open('${esc(l.url)}','_blank')">🔗 Abrir</button>
+            <button class="btn-icon qr" onclick="showQr('${l.docId}')">🔲 QR Code</button>
             <button class="btn-icon whatsapp" onclick="shareWhatsapp('${l.docId}')">💬 WhatsApp</button>
             <button class="btn-icon move" onclick="moveLink('${l.docId}')">${moveLabel}</button>
             <button class="btn-icon" onclick="openDrawer('${l.docId}')">✏️ Editar</button>
